@@ -5,6 +5,7 @@
 \newcommand\katja[1]{{\color{dark-cyan}Katja: #1}}
 
 \newcommand\TODO[1]{{\color{red}TODO: #1}}
+\newcommand\MAYBE[1]{{\color{blue} #1}}
 
 % if you need to pass options to natbib, use, e.g.:
 %     \PassOptionsToPackage{numbers, compress}{natbib}
@@ -76,10 +77,12 @@
 
 \maketitle
 
-\begin{abstract}
-  We consider learning strategies in fully competitive zero-sum games. There have been two main properties identified as desirable for agents that learn in  such settings. This includes being convergent in self play, where the agent learns a Nash Equilibrium Strategy (NES) and minimizing regret when dealing with opponent agents that are playing a stationary policy. One approach for dealing with these problems is Win or Learn Fast (WoLF), this approach has been shown to converge to NES in self play, as well as playing best response when playing against stationary opponents. 
+\MAYBE{Making claims we haven't proven}
 
-  In this paper we look to combine the recent advancements in Deep Reinforcement Learning with Win or Learn Fast. In particular - we focus on a policy gradient algorithm, PPO, which has shown excellent empirical performance in multi-agent scenarios (self-play). We present a systematic empirical investigation into whether WoLF can be effectively adapted to this state of the art algorithm, and whether the characteristics of WoLF continue to hold. \katja{Mention key result / insight here.}
+\TODO{Represents a TODO comment}
+
+\begin{abstract}
+    We consider learning strategies in fully competitive zero-sum games. There have been two main properties identified as desirable for agents that learn in  such settings. This includes being convergent in self play, where the agent learns a Nash Equilibrium Strategy (NES) and minimizing regret when dealing with opponent agents that are playing a stationary policy. One approach for dealing with these problems is Win or Learn Fast (WoLF), this approach has been shown to converge to NES in self play, as well as playing best response when playing against stationary opponents. In this paper we look to combine the recent advancements in Deep Reinforcement Learning with Win or Learn Fast. In particular - we focus on a policy gradient algorithm, PPO, which has shown excellent empirical performance in multi-agent scenarios (self-play). We present a systematic empirical investigation into whether WoLF can be effectively adapted to this state of the art algorithm, and whether the characteristics of WoLF continue to hold. \MAYBE{We demonstrate that WoLF is able to improve the performance of PPO in multiple environments and give insight into environment properties that help PPO learn a strategy close to the NES.} \katja{Mention key result / insight here.}
 
   % Many advancements have been made in deep reinforcement learning in recent years, allowing approaches such as Deep Q-Networks (DQN) to learn from the raw game images. These systems can produce better than human play in a range of classic Atari games. We empirically show that combining these approaches allows for better convergence to the NES and best response in multiagent environments with more complex state space representations.
 \end{abstract}
@@ -104,7 +107,7 @@ RL work focusing on agents that solve this type of problem without much consider
 of how they may perform in a multiagent environment where a deterministic strategy may
 not be optimal.
 
-\subsubsecion{Matrix Games}
+\subsubsection{Matrix Games}
 
 A framework that does deal with multiple agents are matrix games. These games
 can be represented by the following tuple $(n, \mathcal{A}_{1...n}, \mathcal{R}_{1...n})$
@@ -149,7 +152,7 @@ that the original WoLF work and our work is trying to learn.
 
 \katja{best response? discuss other solution concepts if relevant}
 
-\subsecion{Properties of Multi-Agent systems}
+\subsection{Properties of Multi-Agent systems}
 
 Within multiagent literature two main properties have
 been identified as desirable for any multiagent learning
@@ -319,14 +322,14 @@ Tackles in the game are explained in both the original Minimax-Q paper and the B
 
 \begin{figure}
     \centering
-    \includegraphics[width=20em]{Figures/minimax-tackle}
+    \includegraphics[width=20em]{./Figures/minimax-tackle.png}
     \caption{Tackle as described for Minimax-Q, when A agent moves down and B agent moves left}
     \label{fig:minimax-tackle}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=20em]{Figures/bowling-tackle}
+    \includegraphics[width=20em]{./Figures/bowling-tackle.png}
     \caption{Tackle as described in Bowling, when A agent moves down and B agent moves left}
     \label{fig:bowling-tackle}
 \end{figure}
