@@ -89,6 +89,16 @@
 
 \section{Introduction}
 
+In multi-agent games the optimal strategy is linked to the strategy of the other players within the environment. This results in different optimal strategies depending on the opponent. One way of tackling this problem is to consider the Nash Equilibrium of a game. The Nash equilibrium is a strategy that if all the player are playing in a Nash equilibrium no one player can increase their payoff by changing their strategy. This means there exists a stationary policy that is minimally exploitable against agents that are trying to maximise their own reward. This gives us a target policy to learn that can be frozen and has a known minimum payoff.
+
+There are problems when trying to learn in multi-agent systems. If we are training against a learning opponent then we are constantly trying to hit a moving target as the opponents policy updates over time. This results in traditional reinforcment learning agents cycling through policies around the Nash equilibrium, meaning if we freeze the policy at any point it would be a sum optimal solution when an agent is trained against that stationary policy. Some agents covered in this paper will pre-compute the Nash equilibrium ahead of training in order to use that policy if it detects that the opponent is learning, this will work well for simple environments were it is relatively easy to compute the Nash equilibrium but will not scale to larger multi-agent environments.
+
+Previous work in this area has highlighted two properties that would be desirable for agents learning in multi-agent environments. The first property is rationality, this property states that the agent should learn a best response to any policy that it converges to. The second property is convergence this states that the agent must converge to a stationary policy, for some class of learning algorithms. If an agent conforms to both of these properties then it will converge to a Nash equilibrium.
+
+In this paper we look to extend WoLF to Deep Reinforcement learning. We do this by comparing the performance of standard PPO, a state of the art Deep RL algorithm, to a new approach WoLF-PPO. We evaluate them in traditional game theory matrix-games, we also test the performance on variations of these games that shift the Nash equilibrium.
+
+We show that WoLF in Deep Reinforcment learning dies have a positive effect, we also demonstrate that in some multi-agent environments PPO achieves good performance. This is specifically in environments were the Nash policy is the Max-Entropy policy.
+
 \section{Background}
 
 \subsection{Game Frameworks}
