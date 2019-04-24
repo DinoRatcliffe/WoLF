@@ -296,6 +296,12 @@ We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This 
 
 Connection with IPD - hysteretic agents ... questions around assessing "winning" or "losing" in more general games
 
+In this paper we wanted to investigate if WoLF can be extended to Deep Reinforcment learning. We did this by comparing PPO to WoLF-PPO and evaluating the differences when learning the traditional game theory games Matching Pennies and Rock Paper Scissors. We alos created variants of these games in order to shift the Nash off the max-entropy policy.
+
+In our experiments we showed that the performance of PPO in both standard MP and RPS is better than originally expected. We believe this is due to the fact that thte Nash equilibrium for these games lies on the max-entropy policy. PPO contains a max-entropy term in its objective function, this PPO has tan unfair advantage in these specific environments dut to the Nash equilibrium being directly optimised by the max-entropy term in the objective function. When training on variants of MP and RPS to shift the Nash Equilibrium off the max-entropy policy we observe that WoLF now provides a much greater advantage over traditional PPO as the agent now learns a policy much closer to the nash equilibrium. We also observed that WoLF-PPO is more robust than PPO when dealing with large learning rates.
+
+In this work we have demonstrated that the WoLF approach can be extended to Deep RL while providing benefits when learning in multi-agent environments, getting closer to the nash equilibrium. We would like to expand this to extensive form games in the future, specifically the Soccer environment. We would then like to expand beyond what is possible with tabular RL in order to demonstrate both the advantages of WoLF and Deep RL by training on raw pixel data.
+
 \subsubsection*{Acknowledgments}
 
 Use unnumbered third level headings for the acknowledgments. All acknowledgments
