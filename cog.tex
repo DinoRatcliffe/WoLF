@@ -224,6 +224,12 @@ they aslo observe that the agents final policies vary greatly from run to run wi
 
 For our empirical results we aimed to highlight the difference between PPO and WoLF-PPO, we have therefore used the same experimental setup and environments form the original WoLF paper, as these were also designed to highlight the advantages of WoLF. We also introduce some weighted variants the the environments to highlight the effect of the entropy term present in PPOs objective function.
 
+\subsection{Network Setup}
+
+Due to the simplicity of WoLF achieving convergence to Nash Equilibriums by varying the learning rate it is a relativly easy approach to apply to current Deep RL approaches. We chose to use PPO as the base agent as it has been shown to acheive good results in both single player environments and when training on large amounts of experience in complex multiagent environments \TODO{[AI5:ref]}. We vary our learning rate by a ratio of $\alpha$ where $\beta_{LOSE} = \alpha\beta_{WIN}$, for all experiments $\alpha = 4$. In order to make sure that adaptive learning rate optimisation such as ADAM or AdaGrad didn't have an effect on the variable learning rate we used standard Stochastic Gradient Descent (SGD) for all experiments. In order to evaluate if we are "winning" we also need to estimate if we are doing better than the Nash Equilibrium Strategy. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games. In future wor kwe would like to present a method for learning an estimation of Nash using function approximation.
+
+The network used for all experiments is a small fully connected feed forward neural network, two hidden layers of $20$ neurons, due to the simplicity of the experimental environments. We kept the network and experimental setup simple as we are attempting to establish the posibility of fruitful research in this area for the furture.
+
 \subsection{Matching Pennies}
 
 The first and simplest environment we used is Matching Pennies in both its original form with a uniform random Nash Equilibrium and a weighted form, were the Nash Equilibrium is shifted away from uniform random. The payoff matrices are shown in Tables \ref{tab:stock-mp} and \ref{tab:weighted-mp} respectivly. 
