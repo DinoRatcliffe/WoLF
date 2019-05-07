@@ -145,14 +145,14 @@ the agent to learn a best-response strategy against any agent that
 converges to a stationary policy. This is a relatively easy property to 
 obtain, given that stochastic games with an opponent playing a stochastic 
 policy can be framed as an MDP. So this means that any agent that can 
-solve an MDP is rational by this definition.
+solve an MDP is rational by this definition\cite{bowling2002multiagent}.
 
 The second property dictates that the agent will converge to a stationary policy given 
 a stationary agent or a learning agent from a defined class. This class of learning
 algorithms is usually defined as consisting of most "useful" algorithms (often restricted
 to rational algorithms). In practise this results in most literature focusing on self 
 play, however some work has been empirically shown to converge with a small subset of learning 
-agents beyond self play. 
+agents beyond self play\cite{bowling2002multiagent}. 
 
 The reason that these two rules have been identified as desirable properties for mulitagent
 systems to possess is how their relationship relates to the Nash equilibrium. This comes from 
@@ -190,11 +190,11 @@ payoff to the expected payoff of the current average policy. This provides a est
 
 \subsection{Proximal Policy Optimisation}
 
-Proximal Policy Optimisation (PPO) is a policy based gradient method for deep reinforcement learning. It is a current state of the art deep reinforcment leanring algorithm that has shown good results on atari games, mujoco control tasks and Dota 2. PPO is based on the ideas introduced with Trust Region Policy Optimisation (TRPO). It does this whilst trying trying to solve many problems with TRPO. TRPO is relatively complicated to implement when compared to other Deep RL methods, it is not compatible with architectures involving noise, making dropout unusable, similarly TRPO also doesn't allow for parameter sharing making shared layers between policy and value output impossible as well as training with auxiliary tasks.
+Proximal Policy Optimisation (PPO) is a policy based gradient method for deep reinforcement learning. It is a current state of the art deep reinforcment leanring algorithm that has shown good results on atari games, mujoco control tasks and Dota 2\cite{schulman2017proximal}\cite{OpenAI_dota}. PPO is based on the ideas introduced with Trust Region Policy Optimisation (TRPO)\cite{schulman2015trust}. It does this whilst trying trying to solve many problems with TRPO. TRPO is relatively complicated to implement when compared to other Deep RL methods, it is not compatible with architectures involving noise, making dropout unusable, similarly TRPO also doesn't allow for parameter sharing making shared layers between policy and value output impossible as well as training with auxiliary tasks.
 
 PPO is able to improve these shortcomings of TRPO by introducting clipped probability ratios that can be used as a lower bound estimate of the policy performance. This means that PPO only requires first-order optimisation, making PPO easier to implement and support noisy architectures and parameter sharing. 
 
-The objective function for PPO is shown in equation \ref{eq:ppo-objective}. 
+The objective function for PPO is shown in equation \ref{eq:ppo-objective}.
 
 \begin{equation}
     L_t^{CLIP+VF+S}(\theta) = \hat{\mathbb{E}}_t\big[L_t^{CLIP}(\theta)-c_1L_t^{VF}(\theta)+c_2S[\pi_{\theta}](S_t)\big]
@@ -208,13 +208,11 @@ $c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus and $L_t^{VF} = (
 %    \label{eq:trpo-objective}
 %\end{equation}
 
-\TODO{Explain clipping here? Not sure how much detail to go into, the fact it optimises max-etropy is the main takeaway about how PPO works for this paper? Should probably focus more detail here though and cut content else where}
-
 PPO has shown state of the art results on control tasks and better sample comlexity on the Atari environments.
 
 \subsection{Multi-Agent PPO}
 
-There has been some previous work in applying PPO to multi-agent environments. In the work by ??et al, the main focus is the introduction of new competative multi-agent control tasks and how PPO performs in these environments, evaluating the effect of an "exploration" reward and opponent sampling. Many of their findings and observations are relevant to our work.The tasks introduced are two player fully competitive control tasks, including games that involve scoring goals or getting past the other player. These tasks also support two body types, Ant and humanoid. The environments are not directly related to our work as it would be difficult to evaluate the distance to the Nash equilibrium in these environments. They do however train PPO on these environments and make many useful observations. they asses the performance of PPO when using opponent sampling were old version of the opponent are sampled throughout training. They present that opponent sampling is a form of curriculum learning that is inherent in competative multi-agent environments.
+There has been some previous work in applying PPO to multi-agent environments. In the work by Bansal et al\cite{balduzzi2019open}, the main focus is the introduction of new competative multi-agent control tasks and how PPO performs in these environments, evaluating the effect of an "exploration" reward and opponent sampling. Many of their findings and observations are relevant to our work.The tasks introduced are two player fully competitive control tasks, including games that involve scoring goals or getting past the other player. These tasks also support two body types, Ant and humanoid. The environments are not directly related to our work as it would be difficult to evaluate the distance to the Nash equilibrium in these environments. They do however train PPO on these environments and make many useful observations. they asses the performance of PPO when using opponent sampling were old version of the opponent are sampled throughout training. They present that opponent sampling is a form of curriculum learning that is inherent in competative multi-agent environments.
 
 They observe that without opponent sampling then one agent can begin to dominate the other and result in a strategy that has overfitted to the opponent policy. They manage to improve this by using opponent sampling over the course of training resulting in better final policies. They do note that uniform sampling is not always the best approach and demonstrate environments were weighting the sampling to more recent agents results in better performance.
 
@@ -226,9 +224,15 @@ For our empirical results we aimed to highlight the difference between PPO and W
 
 \subsection{Network Setup}
 
-Due to the simplicity of WoLF achieving convergence to Nash Equilibriums by varying the learning rate it is a relativly easy approach to apply to current Deep RL approaches. We chose to use PPO as the base agent as it has been shown to acheive good results in both single player environments and when training on large amounts of experience in complex multiagent environments \TODO{[AI5:ref]}. We vary our learning rate by a ratio of $\alpha$ where $\beta_{LOSE} = \alpha\beta_{WIN}$, for all experiments $\alpha = 4$. In order to make sure that adaptive learning rate optimisation such as ADAM or AdaGrad didn't have an effect on the variable learning rate we used standard Stochastic Gradient Descent (SGD) for all experiments. In order to evaluate if we are "winning" we also need to estimate if we are doing better than the Nash Equilibrium Strategy. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games. In future wor kwe would like to present a method for learning an estimation of Nash using function approximation.
+% draft 0
+%Due to the simplicity of WoLF achieving convergence to Nash Equilibriums by varying the learning rate it is a relativly easy approach to apply to current Deep RL approaches. We chose to use PPO as the base agent as it has been shown to acheive good results in both single player environments and when training on large amounts of experience in complex multiagent environments \TODO{[AI5:ref]}. We vary our learning rate by a ratio of $\alpha$ where $\beta_{LOSE} = \alpha\beta_{WIN}$, for all experiments $\alpha = 4$. In order to make sure that adaptive learning rate optimisation such as ADAM or AdaGrad didn't have an effect on the variable learning rate we used standard Stochastic Gradient Descent (SGD) for all experiments. In order to evaluate if we are "winning" we also need to estimate if we are doing better than the Nash Equilibrium Strategy. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games. We would like to extend this work in the future to deal with extensive form games such as Gridworld Soccer.
 
-The network used for all experiments is a small fully connected feed forward neural network, two hidden layers of $20$ neurons, due to the simplicity of the experimental environments. We kept the network and experimental setup simple as we are attempting to establish the posibility of fruitful research in this area for the furture.
+%The network used for all experiments is a small fully connected feed forward neural network, two hidden layers of $20$ neurons, due to the simplicity of the experimental environments. We kept the network and experimental setup simple as we are attempting to establish the posibility of fruitful research in this area for the furture.
+
+% draft 1
+When extending an approach to use WoLF two properties are required. Due to the fact that NES can be stochastic policies then an agent that can learn stochastic policies is required. The other property required is that the learning rate of the agent can be varied over training. Many Deep RL agents posses these properties, such as PPO, TRPO and A3C. This means there are many possible candidates for testing the properties of WoLF in the Deep RL framework. We chose to use PPO as the base agent as it has been shown to acheive good results in both single player environments and when training on large amounts of experiance in complex multiagent environments\cite{OpenAI_dota}. We vary our learning rate by a ratio of $\alpha$ where $\beta_{LOSE} = \alpha\beta_{WIN}$, for all experiments $\alpha = 4$. In order to make sure that adaptive learning rate optimisation such as ADAM or AdaGrad didn't have an effect on the variable learning rate we used standard Stochastic Gradient Descent (SGD) for all experiments. In order to evaluate if we are "winning" we also need to estimate if we are doing better than the Nash Equilibrium Strategy. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games. We would like to extend this work in the future to deal with extensive form games such as Gridworld Soccer. 
+
+The network used for all experiments is a fully connected feed forward neural network, two hidden layers of $20$ neurons. We kept the network and experimental setup simple as we are attempting to establish the posibility of fruitful research in this area for the furture.
 
 \subsection{Matching Pennies}
 
@@ -280,7 +284,7 @@ Moving up form matching Pennies we used Rock Paper Scissors as our next environm
     \label{tab:rps}
 \end{table}
 
-This environment is of interest because many complex commercial games will have multi-agent scenarios that mimic Rock Paper Scissors [ref]. We again present the standard version of Rock Paper Scissors and a weighted variant to move the Nash Equilibrium away from uniform random. The payoff matrices for these versions can be found in Fig \TODO{put in fig}.
+This environment is of interest because many complex commercial games will have multi-agent scenarios that mimic Rock Paper Scissors\cite{balduzzi2019open}. We again present the standard version of Rock Paper Scissors and a weighted variant to move the Nash Equilibrium away from uniform random. The payoff matrices for these versions can be found in Fig \TODO{put in fig}.
 
 \begin{table}
     \centering
@@ -307,7 +311,7 @@ Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we 
 \begin{figure}
     \centering
     \includegraphics[width=20em]{Figures/matching-pennies-lr-1e-2.png}
-    \caption{With a reasonable learning rate of 1e-2 for PPO both agents learn strategies close to the Nash equilibrium.}
+    \caption{Matching Pennies PPO and WoLF-PPO comparison with learning rate of 1e-2.}
     \label{fig:mp-ppo-e2}
 \end{figure}
 
@@ -316,7 +320,7 @@ When the learning rate is increased by an order of magnitude as in Fig \ref{fig:
 \begin{figure}
     \centering
     \includegraphics[width=20em]{Figures/matching-pennies-lr-1e-1.png}
-    \caption{With a learning rate an order of magnitude higher we begin to see a larger negative effect for PPO than that WoLF-PPO variant.}
+    \caption{Matching Pennies PPO and WoLF-PPO comparison with learning rate of 1e-1. An order of magnitude higher.}
     \label{fig:mp-ppo-e1}
 \end{figure}
 
@@ -325,7 +329,7 @@ We demonstrate this phenomenon by using the weighted variant of Matching Pennies
 \begin{figure}
     \centering
     \includegraphics[width=20em]{Figures/weighted-matching-pennies-lr-1e-2.png}
-    \caption{With a reasonable learning rate of 2.5e-4 on the weighted variant of matching pennies we see that WoLF-PPO now greatly out performs PPO.}
+    \caption{Weighted Matching Pennies with a learning rate of 2.5e-4.}
     \label{fig:weighted-mp-ppo-e2}
 \end{figure}
 
@@ -369,8 +373,11 @@ We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This 
 
 In this paper we wanted to investigate if WoLF can be extended to Deep Reinforcment learning. We did this by comparing PPO to WoLF-PPO and evaluating the differences when learning the traditional game theory games Matching Pennies and Rock Paper Scissors. We also created variants of these games in order to shift the Nash off the max-entropy policy.
 
-In our experiments we showed that the performance of PPO in both standard MP and RPS is better than originally expected. We believe this is due to the fact that the Nash equilibrium for these games lies on the max-entropy policy. PPO contains a max-entropy term in its objective function, this means that PPO has an unfair advantage in these specific environments due to the Nash equilibrium being directly optimised by the max-entropy term in the objective function. When training on variants of MP and RPS to shift the Nash Equilibrium off the max-entropy policy we observe that WoLF now provides a much greater advantage over traditional PPO as the agent now learns a policy much closer to the nash equilibrium. We also observed that WoLF-PPO is more robust than PPO when dealing with large learning rates.
+In our experiments we showed that the performance of PPO in both standard MP and RPS is better than originally expected. We believe this is due to the fact that the Nash equilibrium for these games lies on the max-entropy policy. PPO contains a max-entropy term in its objective function, this means that PPO performs well in these specific environments due to the Nash equilibrium being directly optimised by the max-entropy term in the objective function. When training on variants of MP and RPS to shift the Nash Equilibrium off the max-entropy policy we observe that WoLF now provides a much greater advantage over traditional PPO as the agent now learns a policy much closer to the nash equilibrium. It is important to note that using a max-etropy term when training is a popular technique for promoting exploration and preventing agents from commiting to a sub optimal strategy early in training, it is used in approaches such as PPO, TRPO, A3C and SAC. We suspect that similar observations could be made with these approachs with the agents perfoming much better when the max entorpy policy is a NES. We also observed that WoLF-PPO is more robust than PPO when dealing with large learning rates.
 
 In this work we have demonstrated that the WoLF approach can be extended to Deep RL while providing benefits when learning in multi-agent environments, getting closer to the nash equilibrium. We would like to expand this to extensive form games in the future, specifically the Soccer environment. We would then like to expand beyond what is possible with tabular RL in order to demonstrate both the advantages of WoLF and Deep RL by training on raw pixel data.
+
+\bibliography{cog}
+\bibliographystyle{ieeetr}
 
 \end{document}
