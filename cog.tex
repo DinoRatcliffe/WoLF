@@ -164,6 +164,12 @@ $c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus and $L_t^{VF} = (
 
 PPO has shown state of the art results on control tasks and better sample complexity on the Atari environments.
 
+\begin{figure*}[!h]
+        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2.png}{}\hfill
+        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1.png}{}\hfill
+        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2.png}{}
+\end{figure*}
+
 \subsection{Multi-Agent PPO}
 
 There has been some previous work in applying PPO to multi-agent environments. In the work by Bansal et al\cite{balduzzi2019open}, the main focus is the introduction of new competative multi-agent control tasks and how PPO performs in these environments, evaluating the effect of an "exploration" reward and opponent sampling. Many of their findings and observations are relevant to our work.The tasks introduced are two player fully competitive control tasks, including games that involve scoring goals or getting past the other player. These tasks also support two body types, Ant and humanoid. The environments are not directly related to our work as it would be difficult to evaluate the distance to the Nash equilibrium in these environments. They do however train PPO on these environments and make many useful observations. They asses the performance of PPO when using opponent sampling where old version of the opponent are sampled throughout training. They present that opponent sampling is a form of curriculum learning that is inherent in competitive multi-agent environments.
@@ -214,11 +220,10 @@ The first and simplest environment we used is Matching Pennies in both its origi
 \end{table}
 
 \begin{figure*}[!h]
-        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2.png}{}\hfill
-        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1.png}{}\hfill
-        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2.png}{}
+        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-2}{}\hfill
+        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}\hfill
+        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}
 \end{figure*}
-
 
 Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the Nash equilibrium as shown in Fig \ref{fig:mp-ppo-e2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
 
@@ -268,12 +273,6 @@ Moving up form matching Pennies we used Rock Paper Scissors as our next environm
 
 
 In Rock Paper Scissors we see very similar results to what we observed in matching pennies. In Fig \ref{fig:rps-ppo-e2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:rps-ppo-e1}. This is the same behaviour observed in matching pennies.
-
-\begin{figure*}[!h]
-        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-2}{}\hfill
-        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}\hfill
-        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}
-\end{figure*}
 
 We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-ppo-e4} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results. We also show in Fig \ref{fig:weighted-rps-ppo-e1} that even when increasing the learning rate by an order of magnitude WoLF-PPO is still able to outperform PPO, the distance from the NES is increased however not to the degree of PPO.
 
