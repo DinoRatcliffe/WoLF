@@ -165,9 +165,9 @@ $c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus and $L_t^{VF} = (
 PPO has shown state of the art results on control tasks and better sample complexity on the Atari environments.
 
 \begin{figure*}[!h]
-        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2.png}{}\hfill
-        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1.png}{}\hfill
-        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2.png}{}
+        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2}{}\hfill
+        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1}{}\hfill
+        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2}{}
 \end{figure*}
 
 \subsection{Multi-Agent PPO}
@@ -222,14 +222,14 @@ The first and simplest environment we used is Matching Pennies in both its origi
 \begin{figure*}[!h]
         \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-2}{}\hfill
         \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}\hfill
-        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}
+        \minipagefig[0.32\textwidth]{weighted-rock-paper-scissors-lr-1e-1}{}
 \end{figure*}
 
-Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the Nash equilibrium as shown in Fig \ref{fig:mp-ppo-e2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
+Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the Nash equilibrium as shown in Fig \ref{fig:matching-pennies-lr-1e-2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
 
-When the learning rate is increased by an order of magnitude as in Fig \ref{fig:mp-ppo-e1}, it is apparent that the variance away from the NES increases for both PPO and WoLF-PPO, however WoLF-PPO stays much closer to the NES. We believe that the relatively good performance of PPO in this environment is due to the maximizing of entropy in PPOs objective function. In games such as matching pennies the NES is to play uniform random and thus max entropy. That results in this version of matching pennies having its NES directly optimized in the objective function.
+When the learning rate is increased by an order of magnitude as in Fig \ref{fig:matching-pennies-lr-1e-1}, it is apparent that the variance away from the NES increases for both PPO and WoLF-PPO, however WoLF-PPO stays much closer to the NES. We believe that the relatively good performance of PPO in this environment is due to the maximizing of entropy in PPOs objective function. In games such as matching pennies the NES is to play uniform random and thus max entropy. That results in this version of matching pennies having its NES directly optimized in the objective function.
 
-We demonstrate this phenomenon by using the weighted variant of Matching Pennies to push the NES away from the max entropy policy. In Fig \ref{fig:weighted-mp-ppo-e2} we can see that PPO now wildly diverges away from the NES, with the variance being larger than when dealing with the non weighted matching pennies. We also see that WoLF-PPO outperforms PPO by a larger amount in this environment, showing the benefit of WoLF-PPO in environments without the Nash equilibrium lying on the max entropy strategy.
+We demonstrate this phenomenon by using the weighted variant of Matching Pennies to push the NES away from the max entropy policy. In Fig \ref{fig:weighted-matching-pennies-lr-1e-2} we can see that PPO now wildly diverges away from the NES, with the variance being larger than when dealing with the non weighted matching pennies. We also see that WoLF-PPO outperforms PPO by a larger amount in this environment, showing the benefit of WoLF-PPO in environments without the Nash equilibrium lying on the max entropy strategy.
 
 \subsection{Rock Paper Scissors}
 
@@ -268,13 +268,12 @@ Moving up form matching Pennies we used Rock Paper Scissors as our next environm
     \centering
     \includegraphics[width=12em]{Figures/weighted-rps-ppo-e4.png}
     \caption{\TODO{new caption}}
-    \label{fig:rps-ppo-e2}
+    \label{fig:weighted-rps-ppo-e2}
 \end{figure*}
 
+In Rock Paper Scissors we see very similar results to what we observed in matching pennies. In Fig \ref{fig:rock-paper-scissors-lr-1e-2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:rock-paper-scissors-lr-1e-1}. This is the same behaviour observed in matching pennies.
 
-In Rock Paper Scissors we see very similar results to what we observed in matching pennies. In Fig \ref{fig:rps-ppo-e2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:rps-ppo-e1}. This is the same behaviour observed in matching pennies.
-
-We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-ppo-e4} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results. We also show in Fig \ref{fig:weighted-rps-ppo-e1} that even when increasing the learning rate by an order of magnitude WoLF-PPO is still able to outperform PPO, the distance from the NES is increased however not to the degree of PPO.
+We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-ppo-e2} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results. We also show in Fig \ref{fig:weighted-rock-paper-scissors-lr-1e-1} that even when increasing the learning rate by an order of magnitude WoLF-PPO is still able to outperform PPO, the distance from the NES is increased however not to the degree of PPO.
 
 \section{Conclusion}
 
