@@ -121,11 +121,11 @@ In this paper we perform an initial study into the applicability of extending Wo
 
 Within multiagent literature two main properties have been identified as desirable for any multiagent learning system.
 
-The first of these properties is rationality, this property requires the agent to learn a best-response strategy against any agent that converges to a stationary policy. This is a relatively easy property to obtain, given that stochastic games with an opponent playing a \TODO{stochastic policy} can be framed as an MDP. So this means that any agent that can solve an MDP is rational by this definition\cite{bowling2002multiagent}.
+The first of these properties is rationality, this property requires the agent to learn a best-response strategy against any agent that converges to a stationary policy. This is a relatively easy property to obtain, given that stochastic games with an opponent playing a stochastic policy can be framed as an MDP. So this means that any agent that can solve an MDP is rational by this definition\cite{bowling2002multiagent}.
 
 The second property dictates that the agent will converge to a stationary policy given a stationary agent or a learning agent from a defined class. This class of learning algorithms is usually defined as consisting of most "useful" algorithms (often restricted to rational algorithms). In practise this results in most literature focusing on self play, however some work has been empirically shown to converge with a small subset of learning agents beyond self play\cite{bowling2002multiagent}. 
 
-Given these two rules if two agents are both rational and convergent then they will both converge to a stationary best response strategy against eachother resulting in having coverged to a NES. \TODO{explain why?}
+Given these two rules if two agents are both rational and convergent then they will both converge to a stationary best response strategy against eachother resulting in having coverged to a NES.
 
 %The reason that these two rules have been identified as desirable properties for mulitagent
 %systems to possess is how their relationship relates to the Nash equilibrium. This comes from 
@@ -185,26 +185,13 @@ For our empirical results we aimed to highlight the difference between PPO and W
 \subsection{Network Setup}
 
 % draft 1
-When extending an approach to use WoLF two properties are required. Due to the fact that the NES can be stochastic the ability to learn stochastic policies is required. The other property required is that the learning rate of the agent can be varied over training. Many Deep RL agents posses these properties, such as PPO, TRPO and A3C. This means there are many possible candidates for testing the properties of WoLF in the Deep RL framework. We chose to use PPO as the base agent as it has been shown to achieve good results in both single player environments and when training on large sample sizes in complex multiagent environments\cite{OpenAI_dota}. We vary our learning rate by a ratio of $4$ where \TODO{$\alpha_{LOSE} = 4\alpha_{WIN}$}. In order to make sure that adaptive learning rate optimisation such as ADAM or AdaGrad didn't have an effect on the variable learning rate we used standard Stochastic Gradient Descent (SGD) for all experiments. In order to evaluate if we are "winning" we also need to estimate if we are doing better than the Nash Equilibrium Strategy. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games. We would like to extend this work in the future to deal with extensive form games such as Gridworld Soccer.
+When extending an approach to use WoLF two properties are required. Due to the fact that the NES can be stochastic the ability to learn stochastic policies is required. The other property required is that the learning rate of the agent can be varied over training. Many Deep RL agents posses these properties, such as PPO, TRPO and A3C. This means there are many possible candidates for testing the properties of WoLF in the Deep RL framework. We chose to use PPO as the base agent as it has been shown to achieve good results in both single player environments and when training on large sample sizes in complex multiagent environments\cite{OpenAI_dota}. We vary our learning rate by a ratio of $4$ where $\alpha_{LOSE} = 4\alpha_{WIN}$. In order to make sure that adaptive learning rate optimisation such as ADAM or AdaGrad didn't have an effect on the variable learning rate we used standard Stochastic Gradient Descent (SGD) for all experiments. In order to evaluate if we are "winning" we also need to estimate if we are doing better than the Nash Equilibrium Strategy. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games. We would like to extend this work in the future to deal with extensive form games such as Gridworld Soccer.
 
 The network used for all experiments is a fully connected feed forward neural network, two hidden layers of $20$ neurons. We kept the network and experimental setup simple as we are attempting to establish the posibility of fruitful research in this area for the furture.
 
 \subsection{Matching Pennies}
 
 The first and simplest environment we used is Matching Pennies in both its original form with a uniform random Nash Equilibrium and a weighted form, were the Nash Equilibrium is shifted away from uniform random. Matching pennies is a game were both players pick a side of a coin, either heads or tails, these choices are then reveled simultaneously with one player receiving a point if they match and the other receiving a point if they differ. This results in the Nash Equilibrium being uniform random, if you pick the side of the coin at random then you will win 50\% of the games irrespective of your opponents strategy. The payoff matrix for the weighted variant is shown in Table \ref{tab:weighted-mp} this variant shifts the NES away from uniform random.
-
-%\begin{table}
-%    \centering
-%    \setlength{\extrarowheight}{2pt}
-%    \begin{tabular}{*{4}{c|}}
-%      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-4}
-%      \multicolumn{1}{c}{} &  & $H$  & $T$ \\\cline{2-4}
-%      \multirow{2}*{Player $1$}  & $H$ & $(1,-1)$ & $(-1,1)$ \\\cline{2-4}
-%      & $T$ & $(-1,1)$ & $(1,-1)$ \\\cline{2-4}
-%    \end{tabular}
-%    \caption{Payoff matrix for standard Matching Pennies, with a Nash of uniform random.}
-%    \label{tab:stock-mp}
-%\end{table}
 
 \begin{table}
     \centering
@@ -264,16 +251,9 @@ Moving up form matching Pennies we used Rock Paper Scissors as our next environm
     \label{tab:weighted-rps}
 \end{table}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=12em]{Figures/weighted-rps-ppo-e4.png}
-    \caption{\TODO{new caption}}
-    \label{fig:weighted-rps-ppo-e2}
-\end{figure*}
+In Rock Paper Scissors we see very similar results to what we observed in matching pennies. In Fig \ref{fig:rock-paper-scissors-lr-1e-2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES, as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:rock-paper-scissors-lr-1e-1}. This is the same behaviour observed in matching pennies.
 
-In Rock Paper Scissors we see very similar results to what we observed in matching pennies. In Fig \ref{fig:rock-paper-scissors-lr-1e-2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:rock-paper-scissors-lr-1e-1}. This is the same behaviour observed in matching pennies.
-
-We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-ppo-e2} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results. We also show in Fig \ref{fig:weighted-rock-paper-scissors-lr-1e-1} that even when increasing the learning rate by an order of magnitude WoLF-PPO is still able to outperform PPO, the distance from the NES is increased however not to the degree of PPO.
+We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-ppo-e2} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results.
 
 \section{Conclusion}
 
