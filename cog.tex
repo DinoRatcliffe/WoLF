@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{subfig}
+
 \usepackage{multirow,array}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -16,36 +18,6 @@
 
 \newcommand\TODO[1]{{\color{red}TODO: #1}}
 \newcommand\MAYBE[1]{{\color{blue} #1}}
-\newcommand{\includegraphicsanon}[2][0.9\columnwidth]{
-\ifdefined\final
-  \includegraphics[width=#1]{Figures/#2}
-\else
-  \IfFileExists{./Figures/#2-anon.png}{
-          \includegraphics[width=#1]{Figures/#2-anon}
-  }{
-          \includegraphics[width=#1]{Figures/#2}
-  }
-\fi
-}
-
-\newcommand{\insidefig}[3]{
-        \centering
-        \includegraphicsanon[#1]{#2}\\
-        \caption{#3}
-        \label{fig:#2}
-        %\Description{#3}
-}
-
-\newcommand{\minipagefig}[3][0.32\textwidth]{
-        \begin{minipage}[t]{#1}
-\insidefig{1.0\textwidth}{#2}{#3}
-        \end{minipage}
-}
-
-\newcommand{\fig}[3][0.9]{
-\begin{Figure}[!ht]
-\insidefig{#1\columnwidth}{#2}{#3}
-\end{Figure}}
 
 \begin{document}
 
@@ -164,11 +136,18 @@ $c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus and $L_t^{VF} = (
 
 PPO has shown state of the art results on control tasks and better sample complexity on the Atari environments.
 
-\begin{figure*}[!h]
-        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2}{}\hfill
-        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1}{}\hfill
-        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2}{}
+\begin{figure*}[htbp]
+\subfloat[Small learning rate, $NES = 0.50$]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-2}}
+\subfloat[Large learning rate, $NES = 0.50$]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-1}}
+\subfloat[Small learning rate, $NES = 0.40$]{\includegraphics[height=1.8in]{Figures/weighted-matching-pennies-lr-1e-2}}
+    \caption{WoLF-PPO vs PPO matching pennies results, $P(Head)$ is the probability of picking head throughout training}
 \end{figure*}
+
+%\begin{figure*}[!h]
+%    \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2}{Standard Matching Pennies, $P(Head)$ probability of picking head through training, $0.5 = NES$. 1e-2 learning rate}\hfill
+%        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1}{Standard Matching Pennies, $P(Head)$ probability of picking head through training, $0.5 = NES$. Order of magnitude higher learning rate}\hfill
+%        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2}{Weighted Matching Pennies, $P(Head)$ probability of picking head through training, $0.4 = NES$.}
+%\end{figure*}
 
 \subsection{Multi-Agent PPO}
 
@@ -206,10 +185,11 @@ The first and simplest environment we used is Matching Pennies in both its origi
     \label{tab:weighted-mp}
 \end{table}
 
-\begin{figure*}[!h]
-        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-2}{}\hfill
-        \minipagefig[0.32\textwidth]{rock-paper-scissors-lr-1e-1}{}\hfill
-        \minipagefig[0.32\textwidth]{weighted-rock-paper-scissors-lr-1e-1}{}
+\begin{figure*}[htbp]
+    \subfloat[Standard RPS, Small learning rate]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-2}}
+\subfloat[Standard RPS, Large learning rate]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-1}}
+\subfloat[Weighted RPS, Large learning rate]{\includegraphics[height=1.8in]{Figures/weighted-rock-paper-scissors-lr-1e-1}}
+    \caption{WoLF-PPO vs PPO rock paper scissors results, $P(Rock)$ is the probability of picking rock throughout training, $P(Paper)$ is the probability of picking paper throughout training.}
 \end{figure*}
 
 Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the Nash equilibrium as shown in Fig \ref{fig:matching-pennies-lr-1e-2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
