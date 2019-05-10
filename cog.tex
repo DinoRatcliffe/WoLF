@@ -146,7 +146,7 @@ PPO has shown state of the art results on control tasks and better sample comple
 %        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2}{Weighted Matching Pennies, $P(Head)$ probability of picking head through training, $0.4 = NES$.}
 %\end{figure*}
 
-\subsection{Deep MARL}
+\subsection{Multiagent Policy Gradient Methods}
 
 In the work by Lowe et al\cite{lowe2017multi}, an approach for multi-agent actor critic learning is proposed. This approach focuses on performance of actor-critic methods in a range of competative and cooperative tasks. They present a method that uses extra information at training time with a centralised critic. They also present results for their model when trained with policy ensembles, showing that it improves training stability and agent robustness. However the robustness of the agent is measured by testing the agent against other pre-trained policies. This means that the lower bound for performance is not known for these agents. No attempt is made in this work to evaluate the distance of the learnt policies from a NES.
 
