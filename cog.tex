@@ -20,27 +20,27 @@
 \newcommand\MAYBE[1]{{\color{blue} #1}}
 
 \begin{document}
-\setlength{\intextsep}{0.5ex}
+\setlength{\intextsep}{0.6ex}
 
 \title{Win or Learn Fast Proximal Policy Optimisation (WoLF-PPO)}
 
-\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
+\author{\IEEEauthorblockN{Dino Stephen Ratcliffe}
+\IEEEauthorblockA{\textit{Electronic Engineering and Computer Science} \\
+\textit{Queen Mary University of London}\\
+London, England \\
+D.Ratcliffe@qmul.ac.uk}
 \and
-\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
+\IEEEauthorblockN{Katja Hofmann}
+\IEEEauthorblockA{\textit{Microsoft Research Cambridge} \\
+\textit{Microsoft}\\
+Cambridge, England \\
+Katja.Hofmann@microsoft.com}
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
+\IEEEauthorblockN{Sam Devlin}
+\IEEEauthorblockA{\textit{Microsoft Research Cambridge} \\
+\textit{Microsoft}\\
+Cambridge, England \\
+Sam.Devlin@microsoft.com}
 }
 
 \maketitle
@@ -76,9 +76,9 @@ In this paper we present an initial study into the ability of PPO to learn the N
 \subsection{Matrix Games} is a framework that deals with multiple agents\cite{basar1999dynamic}. There are two forms of matrix games, zero-sum games and general-sum games. Zero-sum games are strictly competitive, were if one of the agents receives a positive reward then the opposing agent receives a negative reward, this can sum to either zero or some other constant. General-sum games do not have this constraint and can have reward matrices that are identical across agents (resulting in strictly cooperative games) or mixed including both collaborative and competitive interactions between agents. When considering what solved means for this framework two properties emerge, they are the Best Response strategy and the NES\cite{basar1999dynamic}. The best response strategy is the optimal strategy against the joint actions of all the other agents. In the case of playing against a set of stationary opponents there will exist a deterministic best response strategy. The NES takes this one step further and states that all agents should be playing a best response against the joint actions of all its respective opponents. This produces a dynamic where an agent playing the NES can not do better by changing strategy whilst the other agents are also playing a NES. This means that the NES is not an optimal strategy against all agents, however it does provide stability by preventing the agent from being exploited by another strategy. NES have also been proven to exist in all zero-sum games (contain a unique Nash equilibrium) and all general sum games, making it a very desirable strategy to be able to learn.
 
 \begin{figure*}[htbp]
-    \subfloat[Small learning rate, $NES = 0.50$\label{fig:standard-mp-e2}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-2}}
-\subfloat[Large learning rate, $NES = 0.50$\label{fig:standard-mp-e1}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-1}}
-\subfloat[Small learning rate, $NES = 0.40$\label{fig:weighted-mp-e2}]{\includegraphics[height=1.8in]{Figures/weighted-matching-pennies-lr-1e-2}}
+    \subfloat[Standard MP, Small learning rate, Note the scale of the y axis.\label{fig:standard-mp-e2}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-2}}
+\subfloat[Standard MP, Large learning rate\label{fig:standard-mp-e1}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-1}}
+\subfloat[Weighted MP, Small learning rate\label{fig:weighted-mp-e2}]{\includegraphics[height=1.8in]{Figures/weighted-matching-pennies-lr-1e-2}}
     \caption{WoLF-PPO vs PPO matching pennies results, $P(Head)$ is the probability of picking head throughout training. Averaged over 50 runs.}
 \end{figure*}
 
@@ -126,9 +126,11 @@ Although the proofs for this method do require knowing detailed information abou
 
 \subsection{Proximal Policy Optimisation}
 
-Proximal Policy Optimisation (PPO) is a policy based gradient method for deep reinforcement learning. It is a current state of the art deep reinforcment learning algorithm that has shown good results on atari games, mujoco control tasks\cite{schulman2017proximal} and Dota 2\cite{OpenAI_dota}. PPO is based on the ideas introduced with Trust Region Policy Optimisation (TRPO)\cite{schulman2015trust}. It does this whilst trying to solve many problems with TRPO. TRPO is relatively complicated to implement when compared to other Deep RL methods, it is not compatible with architectures involving noise, making dropout unusable, similarly TRPO also doesn't allow for parameter sharing making shared layers between policy and value output impossible as well as training with auxiliary tasks.
+Proximal Policy Optimisation (PPO) is a policy based gradient method for deep reinforcement learning. It is a current state of the art deep reinforcment learning algorithm that has shown good results on atari games, mujoco control tasks\cite{schulman2017proximal} and Dota 2\cite{OpenAI_dota}. PPO is based on the ideas introduced with Trust Region Policy Optimisation (TRPO)\cite{schulman2015trust}. PPO introduces clipped probability ratios that can be used as a lower bound estimate of the policy performance. This means that PPO only requires first-order optimisation, making PPO easier to implement and support noisy architectures and parameter sharing.
 
-PPO is able to improve these shortcomings of TRPO by introducing clipped probability ratios that can be used as a lower bound estimate of the policy performance. This means that PPO only requires first-order optimisation, making PPO easier to implement and support noisy architectures and parameter sharing. 
+%It does this whilst trying to solve many problems with TRPO. TRPO is relatively complicated to implement when compared to other Deep RL methods, it is not compatible with architectures involving noise, making dropout unusable, similarly TRPO also doesn't allow for parameter sharing making shared layers between policy and value output impossible as well as training with auxiliary tasks.
+
+%PPO is able to improve these shortcomings of TRPO by introducing clipped probability ratios that can be used as a lower bound estimate of the policy performance. This means that PPO only requires first-order optimisation, making PPO easier to implement and support noisy architectures and parameter sharing. 
 
 The objective function for PPO is shown in equation \ref{eq:ppo-objective}.
 
@@ -142,7 +144,7 @@ $c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus and $L_t^{VF} = (
 PPO has shown state of the art results on control tasks and better sample complexity on the Atari environments.
 
 \begin{figure*}[htbp]
-    \subfloat[Standard RPS, Small learning rate\label{fig:standard-rps-e2}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-2}}
+    \subfloat[Standard RPS, Small learning rate, note the scale of the y axis.\label{fig:standard-rps-e2}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-2}}
     \subfloat[Standard RPS, Large learning rate\label{fig:standard-rps-e1}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-1}}
     \subfloat[Weighted RPS, Large learning rate\label{fig:weighted-rps-e1}]{\includegraphics[height=1.8in]{Figures/weighted-rock-paper-scissors-lr-1e-1}}
     \caption{WoLF-PPO vs PPO rock paper scissors results, $P(Rock)$ is the probability of picking rock throughout training, $P(Paper)$ is the probability of picking paper throughout training.}
@@ -164,7 +166,25 @@ PPO already varies the learning rate as it is annealed over training. In impleme
 
 For all of our experiments we used a ratio of $4$ between our winning and losing learning rates where $\alpha_{LOSE} = 4\alpha{WIN}$. The network used for all experiments is a fully connected feed forward neural network, with two hidden layers of $20$ neurons.
 
-\begin{table*}
+\section{Empirical Experiments}
+
+
+For our empirical results we aimed to highlight the difference between PPO and WoLF-PPO, we have therefore used the same experimental setup and environments from the original WoLF paper, as these were also designed to highlight the advantages of WoLF. We also introduce some weighted variants of the environments to highlight the effect of the entropy term present in PPOs objective function. In table \ref{tab:nash-distance} we present quantitative results for the distance from the NES PPO and WoLF-PPO get in the various environments. As the policies will be circling around and through the NES we take the policy that had the furthest distance from the NES in the last 10 policy updates for each run and then average over all 50 runs.
+
+\begin{table}[!h]
+    \centering
+    \setlength{\extrarowheight}{2pt}
+    \begin{tabular}{*{4}{c|}}
+      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-4}
+      \multicolumn{1}{c}{} &  & $H$  & $T$ \\\cline{2-4}
+      \multirow{2}*{Player $1$}  & $H$ & $(2,-2)$ & $(-1,1)$ \\\cline{2-4}
+      & $T$ & $(-1,1)$ & $(1,-1)$ \\\cline{2-4}
+    \end{tabular}
+    \caption{Payoff matrix for weighted Matching Pennies, with a Nash of $P(H)=0.4$.}
+    \label{tab:weighted-mp}
+\end{table}
+
+\begin{table*}[t]
     \centering
     \begin{tabular}{l|cc|cc|{c}r}
         \cline{2-5}
@@ -181,28 +201,12 @@ For all of our experiments we used a ratio of $4$ between our winning and losing
     \label{tab:nash-distance}
 \end{table*}
 
-\section{Empirical Experiments}
-
-For our empirical results we aimed to highlight the difference between PPO and WoLF-PPO, we have therefore used the same experimental setup and environments from the original WoLF paper, as these were also designed to highlight the advantages of WoLF. We also introduce some weighted variants of the environments to highlight the effect of the entropy term present in PPOs objective function.
 
 \subsection{Matching Pennies}
 
 The first and simplest environment we used is Matching Pennies in both its original form with a uniform random NES and a weighted form, were the NES is shifted away from uniform random. Matching pennies is a game were both players pick a side of a coin, either heads or tails, these choices are then reveled simultaneously with one player receiving a point if they match and the other receiving a point if they differ. This results in the NES being uniform random, if you pick the side of the coin at random then you will win 50\% of the games irrespective of your opponents strategy. The payoff matrix for the weighted variant is shown in Table \ref{tab:weighted-mp} this variant shifts the NES away from uniform random.
 
-\begin{table}[!ht]
-    \centering
-    \setlength{\extrarowheight}{2pt}
-    \begin{tabular}{*{4}{c|}}
-      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-4}
-      \multicolumn{1}{c}{} &  & $H$  & $T$ \\\cline{2-4}
-      \multirow{2}*{Player $1$}  & $H$ & $(2,-2)$ & $(-1,1)$ \\\cline{2-4}
-      & $T$ & $(-1,1)$ & $(1,-1)$ \\\cline{2-4}
-    \end{tabular}
-    \caption{Payoff matrix for weighted Matching Pennies, with a Nash of $P(H)=0.4$.}
-    \label{tab:weighted-mp}
-\end{table}
-
-Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the NES as shown in Fig \ref{fig:standard-mp-e2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
+Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the NES as shown in Fig \ref{fig:standard-mp-e2} and Table \ref{tab:nash-distance}. You can see that the variance for PPO is still within $0.06$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
 
 When the learning rate is increased by an order of magnitude as in Fig \ref{fig:standard-mp-e1}, it is apparent that the variance away from the NES increases for both PPO and WoLF-PPO, however WoLF-PPO stays much closer to the NES. We believe that the relatively good performance of PPO in this environment is due to the maximizing of entropy in PPOs objective function. In games such as matching pennies the NES is to play uniform random and thus max entropy. That results in this version of matching pennies having its NES directly optimized by the max entropy term in the objective function.
 
