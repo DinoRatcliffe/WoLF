@@ -164,7 +164,7 @@ When extending an approach to use WoLF two properties are required. Due to the f
 
 PPO already varies the learning rate as it is annealed over training. In implementations of PPO ADAM is often used, the results presented used Stochastic Gradient Descent (SGD) instead as we want to avoid the adaptive learning rate elements of ADAM from effecting the WoLF approach. We have run the experiments with ADAM and observed similar results. In order to extend PPO to WoLF-PPO an estimation of the performance of the NES is needed. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games.
 
-For all of our experiments we used a ratio of $4$ between our winning and losing learning rates where $\alpha_{LOSE} = 4\alpha{WIN}$. The network used for all experiments is a fully connected feed forward neural network, with two hidden layers of $20$ neurons.
+For all of our experiments we used a ratio of $4$ between our winning and losing learning rates where $\alpha_{LOSE} = 4\alpha_{WIN}$. The network used for all experiments is a fully connected feed forward neural network, with two hidden layers of $20$ neurons.
 
 \section{Empirical Experiments}
 
@@ -188,7 +188,7 @@ For our empirical results we aimed to highlight the difference between PPO and W
     \centering
     \begin{tabular}{l|cc|cc|{c}r}
         \cline{2-5}
-        & \multicolumn{2}{ c| }{$LR=1e-1$} &  \multicolumn{2}{ c| }{$LR=1e-2$}\\ \cline{1-5}
+        & \multicolumn{2}{ c| }{$\alpha=0.1$} &  \multicolumn{2}{ c| }{$\alpha=0.01$}\\ \cline{1-5}
     \multicolumn{1}{ |l| }{Game}                & PPO & WoLF-PPO & PPO & WoLF-PPO\\
     \hline
         \multicolumn{1}{ |l| }{MP}                  & $0.558 \pm 0.093$ & $\mathbf{0.078 \pm 0.033}$ & $0.056 \pm 0.035$ & $\mathbf{0.012 \pm 0.007}$ \\
