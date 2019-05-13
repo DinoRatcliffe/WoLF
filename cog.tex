@@ -105,7 +105,7 @@ In this paper we present an initial study into the ability of PPO to learn the N
 
 \subsection{Properties of Multi-Agent systems}
 
-Within the literature two main properties have been identified as desirable for any multi-agent learning systems. The first of these properties is rationality\cite{bowling2002multiagent}, rationality states, \textit{If the other palyers' policies converge to stationary policies then the learning algorithm will converge to a policy that is a best-response to the other palyers' policies}. This is a relatively easy property to obtain, given that stochastic games with an opponent playing a stochastic policy can be framed as an MDP. So this means that any agent that can solve an MDP is rational by this definition\cite{bowling2002multiagent}. The second property is convergence defined as, \textit{The learner will necessarily converge to a stationary policy. This property will usually be conditioned on the other agents using an algorithm from some class of learning algorithms}. In practise most literature focuses on self play, however some work has been empirically shown to converge with a small subset of learning agents beyond self play\cite{bowling2002multiagent}. Given these two rules if two agents are both rational and convergent then they will both converge to a stationary best response strategy against each other resulting in having converged to a NES.
+Within the literature two main properties have been identified as desirable for any multi-agent learning systems. The first of these properties is rationality\cite{bowling2002multiagent}, rationality states, \textit{If the other palyers' policies converge to stationary policies then the learning algorithm will converge to a policy that is a best-response to the other palyers' policies}. The second property is convergence defined as, \textit{The learner will necessarily converge to a stationary policy. This property will usually be conditioned on the other agents using an algorithm from some class of learning algorithms}. In practise most literature focuses on self play, however some work has been empirically shown to converge with a small subset of learning agents beyond self play\cite{bowling2002multiagent}. Given these two rules if two agents are both rational and convergent then they will both converge to a stationary best response strategy against each other resulting in having converged to a NES.
 
 %The reason that these two rules have been identified as desirable properties for mulitagent
 %systems to possess is how their relationship relates to the Nash equilibrium. This comes from 
@@ -120,7 +120,7 @@ Within the literature two main properties have been identified as desirable for 
 
 Win or Learn Fast (WoLF) is an extension to Infinitesimal Gradient Ascent (IGA)\cite{singh2000nash} giving a stronger notion of convergent to a NES. This is done by introducing separate learning rates for when the agent is winning and when it is losing. The agent is judged to be winning if their current expected payoff is better than playing the Nash equilibrium. This change has the effect of the winning agent learning slower and being more "cautious" about updating its strategy until the other agent has learned to counter the new strategy.
 
-This approach does place some strict requirements on what knowledge is needed of the game. The method requires the player's own payoff matrix to be known and the policy of the opponent agent. It would also need to know the Nash Equilibrium in order to compute if the agent is currently winning or losing, this however can be computed from the known payoffs\cite{bowling2002multiagent}.
+%This approach does place some strict requirements on what knowledge is needed of the game. The method requires the player's own payoff matrix to be known and the policy of the opponent agent. It would also need to know the Nash Equilibrium in order to compute if the agent is currently winning or losing, this however can be computed from the known payoffs\cite{bowling2002multiagent}.
 
 Although the proofs for this method do require knowing detailed information about the environment and opponent, a practical algorithm has been presented. This method is based on PHC and uses a comparison of the current expected payoff to the expected payoff of the current average policy over training. This provides a estimation of the equilibrium policy.
 
@@ -177,7 +177,7 @@ For all of our experiments we used a ratio of $4$ between our winning and losing
         \multicolumn{1}{ |l| }{Weighted RPS}        & $0.436 \pm 0.120$ & $\mathbf{0.080 \pm 0.040}$ & $0.124 \pm 0.055$ & $\mathbf{0.077 \pm 0.010}$  \\
     \hline
     \end{tabular}
-    \caption{Comparison of euclidean distance from NES across approaches, learning rates and games. Averaged over 50 runs, Max distance taken over last 10 policy updates.}
+    \caption{Comparison of euclidean distance from NES across approaches, learning rates and games. Mean and Standard Deviation over 50 runs, Max distance taken over last 10 policy updates.}
     \label{tab:nash-distance}
 \end{table*}
 
