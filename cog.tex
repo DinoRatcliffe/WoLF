@@ -50,7 +50,7 @@ email address}
 %    In order to solve many problems agents are required to compete within an environment shared by many other agents. This problem is tackled by multi-agent reinforcement learning (MARL). Treating multi-agent problems as simply non-stationary environments has been shown to produce sub optimal performance. One solution to MARL is to learn a Nash Equilibrium that guarantees a known minimum payoff when playing against other rational agents. We focus on one approach for learning Nash equilibria, Win or Learn Fast (WoLF). WoLF has been shown to converge towards Nash equilibria in a variety of matrix-games and grid based games. We present a systematic empirical investigation into whether WoLF can be effectively adapted to Deep RL, and the characteristics of using WoLF with function approximation. We demonstrate that WoLF is able to improve the performance of Proximal Policy Optimisation (PPO) in multiple environments and give insight into environment properties that help PPO learn strategies close to the Nash Equilibrium.
 
 % draft 2
-    In order for AI agents to solve problems present in multiplayer games agents are required to compete within an environment shared by many other agents. This problem is tackled by multi-agent reinforcement learning (MARL). Applying single agent learning approaches to multi-agent problems has been shown to produce sub-optimal performance due to the environment appearing non-stationary. One solution to MARL is to learn a Nash Equilibrium Strategy (NES) that guarantees a known minimum payoff when playing against other rational agents. We focus on one approach for learning a NES, Win or Learn Fast (WoLF). WoLF has been shown to converge towards a NES in a variety of matrix-games and grid based games. Research into Deep MARL has focused on performance against opponent agents and has not given quantitative results regarding learning the NES. We present a systematic empirical investigation into the ability of Proximal Policy Optimistaion (PPO) to learn a NES, showing instability in certain matrix games and presenting an extension WoLF-PPO that is able to learn a policy that is closer to the NES.
+    In order for AI agents within video games to behave logically the agents are required to compete within an environment shared by many other agents. This problem is tackled by multi-agent reinforcement learning (MARL). Applying single agent learning approaches to multi-agent problems has been shown to produce sub-optimal performance due to the environment appearing non-stationary. One solution to MARL is to learn a Nash Equilibrium Strategy (NES) that guarantees a known minimum payoff when playing against other rational agents. We focus on one approach for learning a NES, Win or Learn Fast (WoLF). WoLF has been shown to converge towards a NES in a variety of matrix-games and grid based games. Research into Deep MARL has focused on performance against opponent agents and has not given quantitative results regarding learning a NES. We present a systematic empirical investigation into the ability of Proximal Policy Optimistaion (PPO) to learn a NES, showing instability in certain matrix games. We then present an extension WoLF-PPO, that is able to learn a policy that is closer to the NES.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -61,7 +61,7 @@ email address}
 % draft 1
 In multi-agent environments the learning problem is non-stationary due to the fact that the other agents polices are changing over time. Traditional Reinforcement Learning (RL) techniques have guarantees that rely on the problem domain being a Markov Decision Process (MDP), given the multi-agent environment is non-stationary this does not hold and the guarantees are lost. Win or Learn Fast (WoLF) attempts to provide guarantees in these situations\cite{bowling2002multiagent}. It provides guarantees of converging to a NES in theory, and has been shown empirically to get closer to a NES than a fixed learning rate agent. Learning a NES is very desirable as it allows us to learn a fixed policy that has a known lower bound payoff when dealing with rational agents.
 
-In this paper we present an initial study into the ability of PPO to learn the NES in a set of traditional game theory matrix-games. We then present an extension to PPO, WoLF-PPO, that is designed to learn policies closer to the NES. We demonstrate that PPO is able to learn policies close to the NES when the NES is the max-entropy policy. We also shown that WoLF-PPO is able to learn a strategy closer to the NES than PPO in a set of matrix games including games where the NES is not the max-entropy policy.
+In this paper we present an initial study into the ability of PPO to learn the NES in a set of traditional game theory matrix-games. We then present an extension to PPO, WoLF-PPO, that is designed to learn policies closer to the NES. We demonstrate that PPO is able to learn policies closer to the NES when the NES is the max-entropy policy. We also shown that WoLF-PPO is able to learn a strategy closer to the NES than PPO in a set of matrix games, including games where the NES is not the max-entropy policy.
 
 \section{Background}
 
@@ -74,6 +74,14 @@ In this paper we present an initial study into the ability of PPO to learn the N
 %These games can be represented by the following tuple $(n, \mathcal{A}_{1...n}, \mathcal{R}_{1...n})$ where $n$ represents the number of agents, $\mathcal{A}_{i}$ represents the actions available to agent $i$ with $A$ representing the joint action between all agents and $\mathcal{R}_{i}$ represents the reward function for agent $i$. The reward function can be represented as a set of $n$ matrices where $n$ is the number of players. 
 % draft 1
 \subsection{Matrix Games} is a framework that deals with multiple agents\cite{basar1999dynamic}. There are two forms of matrix games, zero-sum games and general-sum games. Zero-sum games are strictly competitive, were if one of the agents receives a positive reward then the opposing agent receives a negative reward, this can sum to either zero or some other constant. General-sum games do not have this constraint and can have reward matrices that are identical across agents (resulting in strictly cooperative games) or mixed including both collaborative and competitive interactions between agents. When considering what solved means for this framework two properties emerge, they are the Best Response strategy and the NES\cite{basar1999dynamic}. The best response strategy is the optimal strategy against the joint actions of all the other agents. In the case of playing against a set of stationary opponents there will exist a deterministic best response strategy. The NES takes this one step further and states that all agents should be playing a best response against the joint actions of all its respective opponents. This produces a dynamic where an agent playing the NES can not do better by changing strategy whilst the other agents are also playing a NES. This means that the NES is not an optimal strategy against all agents, however it does provide stability by preventing the agent from being exploited by another strategy. NES have also been proven to exist in all zero-sum games (contain a unique Nash equilibrium) and all general sum games, making it a very desirable strategy to be able to learn.
+
+\begin{figure*}[htbp]
+    \subfloat[Small learning rate, $NES = 0.50$\label{fig:standard-mp-e2}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-2}}
+\subfloat[Large learning rate, $NES = 0.50$\label{fig:standard-mp-e1}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-1}}
+\subfloat[Small learning rate, $NES = 0.40$\label{fig:weighted-mp-e2}]{\includegraphics[height=1.8in]{Figures/weighted-matching-pennies-lr-1e-2}}
+    \caption{WoLF-PPO vs PPO matching pennies results, $P(Head)$ is the probability of picking head throughout training. Averaged over 50 runs.}
+\end{figure*}
+
 
 %\subsubsection{Stochastic Games} is a frame work that combines the Markov Decision Process (MDP) framework and the 
 %Matrix games framework. It can be seen as a MDP with with multiple agents producing 
@@ -97,7 +105,7 @@ In this paper we present an initial study into the ability of PPO to learn the N
 
 \subsection{Properties of Multi-Agent systems}
 
-Within the literature two main properties have been identified as desirable for any multi-agent learning systems. The first of these properties is rationality\cite{bowling2002multiagent}, rationality states, \textit{If the other palyers' policies converge to stationary policies then the learning algorithm will converge to a policy that is a best-response to the other palyers' policies}. This is a relatively easy property to obtain, given that stochastic games with an opponent playing a stochastic policy can be framed as an MDP. So this means that any agent that can solve an MDP is rational by this definition\cite{bowling2002multiagent}. The second property is convergence defined as, \textit{The learner will necessarily converge to a stationary policy. This property will usually be conditioned on the other agents using an algorithm from some class of learning algorithms}. This class of learning algorithms is usually defined as the set of rational algorithms. In practise this results in most literature focusing on self play, however some work has been empirically shown to converge with a small subset of learning agents beyond self play\cite{bowling2002multiagent}. Given these two rules if two agents are both rational and convergent then they will both converge to a stationary best response strategy against each other resulting in having converged to a NES.
+Within the literature two main properties have been identified as desirable for any multi-agent learning systems. The first of these properties is rationality\cite{bowling2002multiagent}, rationality states, \textit{If the other palyers' policies converge to stationary policies then the learning algorithm will converge to a policy that is a best-response to the other palyers' policies}. This is a relatively easy property to obtain, given that stochastic games with an opponent playing a stochastic policy can be framed as an MDP. So this means that any agent that can solve an MDP is rational by this definition\cite{bowling2002multiagent}. The second property is convergence defined as, \textit{The learner will necessarily converge to a stationary policy. This property will usually be conditioned on the other agents using an algorithm from some class of learning algorithms}. In practise most literature focuses on self play, however some work has been empirically shown to converge with a small subset of learning agents beyond self play\cite{bowling2002multiagent}. Given these two rules if two agents are both rational and convergent then they will both converge to a stationary best response strategy against each other resulting in having converged to a NES.
 
 %The reason that these two rules have been identified as desirable properties for mulitagent
 %systems to possess is how their relationship relates to the Nash equilibrium. This comes from 
@@ -134,23 +142,18 @@ $c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus and $L_t^{VF} = (
 PPO has shown state of the art results on control tasks and better sample complexity on the Atari environments.
 
 \begin{figure*}[htbp]
-    \subfloat[Small learning rate, $NES = 0.50$\label{fig:standard-mp-e2}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-2}}
-\subfloat[Large learning rate, $NES = 0.50$\label{fig:standard-mp-e1}]{\includegraphics[height=1.8in]{Figures/matching-pennies-lr-1e-1}}
-\subfloat[Small learning rate, $NES = 0.40$\label{fig:weighted-mp-e2}]{\includegraphics[height=1.8in]{Figures/weighted-matching-pennies-lr-1e-2}}
-    \caption{WoLF-PPO vs PPO matching pennies results, $P(Head)$ is the probability of picking head throughout training. Averaged over 50 runs.}
+    \subfloat[Standard RPS, Small learning rate\label{fig:standard-rps-e2}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-2}}
+    \subfloat[Standard RPS, Large learning rate\label{fig:standard-rps-e1}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-1}}
+    \subfloat[Weighted RPS, Large learning rate\label{fig:weighted-rps-e1}]{\includegraphics[height=1.8in]{Figures/weighted-rock-paper-scissors-lr-1e-1}}
+    \caption{WoLF-PPO vs PPO rock paper scissors results, $P(Rock)$ is the probability of picking rock throughout training, $P(Paper)$ is the probability of picking paper throughout training.}
 \end{figure*}
 
-%\begin{figure*}[!h]
-%    \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-2}{Standard Matching Pennies, $P(Head)$ probability of picking head through training, $0.5 = NES$. 1e-2 learning rate}\hfill
-%        \minipagefig[0.32\textwidth]{matching-pennies-lr-1e-1}{Standard Matching Pennies, $P(Head)$ probability of picking head through training, $0.5 = NES$. Order of magnitude higher learning rate}\hfill
-%        \minipagefig[0.32\textwidth]{weighted-matching-pennies-lr-1e-2}{Weighted Matching Pennies, $P(Head)$ probability of picking head through training, $0.4 = NES$.}
-%\end{figure*}
 
 \subsection{Multiagent Policy Gradient Methods}
 
 In the work by Lowe et al\cite{lowe2017multi}, an approach for multi-agent actor critic learning is proposed. This approach focuses on performance of actor-critic methods in a range of competative and cooperative tasks. They present a method that uses extra information at training time with a centralised critic. They also present results for their model when trained with policy ensembles, showing that it improves training stability and agent robustness. However the robustness of the agent is measured by testing the agent against other pre-trained policies. This means that the lower bound for performance is not known for these agents. No attempt is made in this work to evaluate the distance of the learnt policies from a NES.
 
-There has been some previous work in applying PPO to multi-agent environments in the work by Bansal et al\cite{bansal2017emergent}. In this work they evaluate PPO in a variety of complex fully competitive multi-agent control tasks. They observe that during training one agent would often learn to dominate the opponent to the point where the opponent is unable to recover. They introduce opponent sampling in order to give the agents a form of curriculum learning that they state is built into all multi-agent environments. They also observe that the agents final policies vary greatly from run to run with different random seeds. No attempt is made in this work to evaluate the distance from the Nash equilibrium. 
+There has been some previous work in applying PPO to multi-agent environments in the work by Bansal et al\cite{bansal2017emergent}. In this work they evaluate PPO in a variety of complex fully competitive multi-agent control tasks. They observe that during training one agent would often learn to dominate the opponent to the point where the opponent is unable to recover. They introduce opponent sampling in order to give the agents a form of curriculum learning that they state is built into all multi-agent environments. They also observe that the agents final policies vary greatly from run to run with different random seeds. No attempt is made in this work to evaluate the distance from the NES.
 
 \section{Method}
 
@@ -159,77 +162,7 @@ When extending an approach to use WoLF two properties are required. Due to the f
 
 PPO already varies the learning rate as it is annealed over training. In implementations of PPO ADAM is often used, the results presented used Stochastic Gradient Descent (SGD) instead as we want to avoid the adaptive learning rate elements of ADAM from effecting the WoLF approach. We have run the experiments with ADAM and observed similar results. In order to extend PPO to WoLF-PPO an estimation of the performance of the NES is needed. In order to do this we average the payoff over training as this will provide an estimation of the payoff the agent would receive when playing the NES. This works well for the games presented but would need to be extended for extensive form games.
 
-For all of our experiments we used a ratio of $4$ between our winning as losing learning rate where $\alpha_{LOSE} = 4\alpha{WIN}$. The network used for all experiments is a fully connected feed forward neural network, two hidden layers of $20$ neurons.
-
-\section{Empirical Experiments}
-
-For our empirical results we aimed to highlight the difference between PPO and WoLF-PPO, we have therefore used the same experimental setup and environments form the original WoLF paper, as these were also designed to highlight the advantages of WoLF. We also introduce some weighted variants of the environments to highlight the effect of the entropy term present in PPOs objective function.
-
-\subsection{Matching Pennies}
-
-The first and simplest environment we used is Matching Pennies in both its original form with a uniform random Nash Equilibrium and a weighted form, were the Nash Equilibrium is shifted away from uniform random. Matching pennies is a game were both players pick a side of a coin, either heads or tails, these choices are then reveled simultaneously with one player receiving a point if they match and the other receiving a point if they differ. This results in the Nash Equilibrium being uniform random, if you pick the side of the coin at random then you will win 50\% of the games irrespective of your opponents strategy. The payoff matrix for the weighted variant is shown in Table \ref{tab:weighted-mp} this variant shifts the NES away from uniform random.
-
-\begin{table}[!ht]
-    \centering
-    \setlength{\extrarowheight}{2pt}
-    \begin{tabular}{*{4}{c|}}
-      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-4}
-      \multicolumn{1}{c}{} &  & $H$  & $T$ \\\cline{2-4}
-      \multirow{2}*{Player $1$}  & $H$ & $(2,-2)$ & $(-1,1)$ \\\cline{2-4}
-      & $T$ & $(-1,1)$ & $(1,-1)$ \\\cline{2-4}
-    \end{tabular}
-    \caption{Payoff matrix for weighted Matching Pennies, with a Nash of $P(H)=0.2$.}
-    \label{tab:weighted-mp}
-\end{table}
-
-\begin{figure*}[htbp]
-    \subfloat[Standard RPS, Small learning rate\label{fig:standard-rps-e2}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-2}}
-    \subfloat[Standard RPS, Large learning rate\label{fig:standard-rps-e1}]{\includegraphics[height=1.8in]{Figures/rock-paper-scissors-lr-1e-1}}
-    \subfloat[Weighted RPS, Large learning rate\label{fig:weighted-rps-e1}]{\includegraphics[height=1.8in]{Figures/weighted-rock-paper-scissors-lr-1e-1}}
-    \caption{WoLF-PPO vs PPO rock paper scissors results, $P(Rock)$ is the probability of picking rock throughout training, $P(Paper)$ is the probability of picking paper throughout training.}
-\end{figure*}
-
-Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the Nash equilibrium as shown in Fig \ref{fig:standard-mp-e2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
-
-When the learning rate is increased by an order of magnitude as in Fig \ref{fig:standard-mp-e1}, it is apparent that the variance away from the NES increases for both PPO and WoLF-PPO, however WoLF-PPO stays much closer to the NES. We believe that the relatively good performance of PPO in this environment is due to the maximizing of entropy in PPOs objective function. In games such as matching pennies the NES is to play uniform random and thus max entropy. That results in this version of matching pennies having its NES directly optimized by the max entropy term in the objective function.
-
-We demonstrate this phenomenon by using the weighted variant of Matching Pennies to push the NES away from the max entropy policy. In Fig \ref{fig:weighted-mp-e2} we can see that PPO now wildly diverges away from the NES, with the variance being larger than when dealing with the non weighted matching pennies. We also see that WoLF-PPO outperforms PPO by a larger amount in this environment, showing the benefit of WoLF-PPO in environments without the Nash equilibrium lying on the max entropy strategy.
-
-\subsection{Rock Paper Scissors}
-
-Moving up form matching Pennies we used Rock Paper Scissors as our next environment. This game consists of three possible actions that form a cyclic winning pattern. This environment is of interest becauase in many commercial video games relative skill is non-transitive similar to the dynamics of rock paper scissors (e.g. StarCraft\cite{balduzzi2019open}). We again use the standard version of Rock Paper Scissors and a weighted variant to move the NES away from uniform random. The payoff matrix for weighted version can be found in Table \ref{tab:weighted-rps}.
-
-%\begin{table}
-%    \centering
-%    \setlength{\extrarowheight}{2pt}
-%    \begin{tabular}{*{5}{c|}}
-%      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-5}
-%      \multicolumn{1}{c}{} &  & $R$  & $P$ & $S$ \\\cline{2-5}
-%      \multirow{2}*{Player $1$}  & $R$ & $(0,0)$ & $(-1,1)$ & $(1,-1)$ \\\cline{2-5}
-%      & $P$ & $(1,-1)$ & $(0,0)$ & $(-1,1)$ \\\cline{2-5}
-%      & $S$ & $(-1,1)$ & $(1,-1)$ & $(0,0)$ \\\cline{2-5}
-%    \end{tabular}
-%    \caption{Payoff matrix for standard Rock Paper Scissors, with a Nash of $P(Rock)=P(Papaer)=P(Scissors)=0.\dot{3}$.}
-%    \label{tab:rps}
-%\end{table}
-
-\begin{table}[!ht]
-    \centering
-    \setlength{\extrarowheight}{2pt}
-    \begin{tabular}{*{5}{c|}}
-      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-5}
-      \multicolumn{1}{c}{} &  & $R$  & $P$ & $S$ \\\cline{2-5}
-      \multirow{2}*{Player $1$}  & $R$ & $(0,0)$ & $(-1,2)$ & $(1,-2)$ \\\cline{2-5}
-      & $P$ & $(2,-1)$ & $(0,0)$ & $(-1,1)$ \\\cline{2-5}
-      & $S$ & $(-2,1)$ & $(1,-1)$ & $(0,0)$ \\\cline{2-5}
-    \end{tabular}
-    \caption{Payoff matrix for weighted Rock Paper Scissors, with a Nash of $P(ROCK)=0.2$ and $P(PAPER)=0.4$.}
-    \label{tab:weighted-rps}
-\end{table}
-
-In Rock Paper Scissors we see very similar results to what we observed in matching pennies. In Fig \ref{fig:standard-rps-e2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES, as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:standard-rps-e1}. This is the same behaviour observed in matching pennies.
-
-We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-e1} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results.
+For all of our experiments we used a ratio of $4$ between our winning and losing learning rates where $\alpha_{LOSE} = 4\alpha{WIN}$. The network used for all experiments is a fully connected feed forward neural network, with two hidden layers of $20$ neurons.
 
 \begin{table*}
     \centering
@@ -248,15 +181,63 @@ We then ran PPO and WoLF-PPO on a weighted version of Rock Paper Scissors. This 
     \label{tab:nash-distance}
 \end{table*}
 
+\section{Empirical Experiments}
+
+For our empirical results we aimed to highlight the difference between PPO and WoLF-PPO, we have therefore used the same experimental setup and environments from the original WoLF paper, as these were also designed to highlight the advantages of WoLF. We also introduce some weighted variants of the environments to highlight the effect of the entropy term present in PPOs objective function.
+
+\subsection{Matching Pennies}
+
+The first and simplest environment we used is Matching Pennies in both its original form with a uniform random NES and a weighted form, were the NES is shifted away from uniform random. Matching pennies is a game were both players pick a side of a coin, either heads or tails, these choices are then reveled simultaneously with one player receiving a point if they match and the other receiving a point if they differ. This results in the NES being uniform random, if you pick the side of the coin at random then you will win 50\% of the games irrespective of your opponents strategy. The payoff matrix for the weighted variant is shown in Table \ref{tab:weighted-mp} this variant shifts the NES away from uniform random.
+
+\begin{table}[!ht]
+    \centering
+    \setlength{\extrarowheight}{2pt}
+    \begin{tabular}{*{4}{c|}}
+      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-4}
+      \multicolumn{1}{c}{} &  & $H$  & $T$ \\\cline{2-4}
+      \multirow{2}*{Player $1$}  & $H$ & $(2,-2)$ & $(-1,1)$ \\\cline{2-4}
+      & $T$ & $(-1,1)$ & $(1,-1)$ \\\cline{2-4}
+    \end{tabular}
+    \caption{Payoff matrix for weighted Matching Pennies, with a Nash of $P(H)=0.2$.}
+    \label{tab:weighted-mp}
+\end{table}
+
+Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the NES as shown in Fig \ref{fig:standard-mp-e2}. You can see that the variance for PPO is still within $0.05$ of the Nash equilibrium. In this setting we see that WoLF-PPO does indeed have lower variance than PPO but not by a large margin.
+
+When the learning rate is increased by an order of magnitude as in Fig \ref{fig:standard-mp-e1}, it is apparent that the variance away from the NES increases for both PPO and WoLF-PPO, however WoLF-PPO stays much closer to the NES. We believe that the relatively good performance of PPO in this environment is due to the maximizing of entropy in PPOs objective function. In games such as matching pennies the NES is to play uniform random and thus max entropy. That results in this version of matching pennies having its NES directly optimized by the max entropy term in the objective function.
+
+We demonstrate this phenomenon by using the weighted variant of Matching Pennies to push the NES away from the max entropy policy. In Fig \ref{fig:weighted-mp-e2} we can see that PPO now wildly diverges away from the NES, with the variance being larger than when dealing with the non weighted matching pennies. We also see that WoLF-PPO outperforms PPO by a larger amount in this environment, showing the benefit of WoLF-PPO in environments without the Nash equilibrium lying on the max entropy strategy.
+
+\subsection{Rock Paper Scissors}
+
+Moving up form matching Pennies we used Rock Paper Scissors (RPS) as our next environment. This game consists of three possible actions that form a cyclic winning pattern. This environment is of interest becauase in many commercial video games relative skill is non-transitive similar to the dynamics of RPS (e.g. StarCraft\cite{balduzzi2019open}). We again use the standard version of RPS and a weighted variant to move the NES away from uniform random. The payoff matrix for the weighted version can be found in Table \ref{tab:weighted-rps}.
+
+\begin{table}[!ht]
+    \centering
+    \setlength{\extrarowheight}{2pt}
+    \begin{tabular}{*{5}{c|}}
+      \multicolumn{2}{c}{} & \multicolumn{2}{c}{Player $2$}\\\cline{3-5}
+      \multicolumn{1}{c}{} &  & $R$  & $P$ & $S$ \\\cline{2-5}
+      \multirow{2}*{Player $1$}  & $R$ & $(0,0)$ & $(-1,2)$ & $(1,-2)$ \\\cline{2-5}
+      & $P$ & $(2,-1)$ & $(0,0)$ & $(-1,1)$ \\\cline{2-5}
+      & $S$ & $(-2,1)$ & $(1,-1)$ & $(0,0)$ \\\cline{2-5}
+    \end{tabular}
+    \caption{Payoff matrix for weighted Rock Paper Scissors, with a Nash of $P(ROCK)=0.2$ and $P(PAPER)=0.4$.}
+    \label{tab:weighted-rps}
+\end{table}
+
+
+In RPS we see very similar results to what we observed in matching pennies. In Fig \ref{fig:standard-rps-e2} we show a sample run of PPO and WoLF-PPO, as shown they both stay close to the NES, as with standard matching pennies the Nash equilibrium lays on the max entropy strategy resulting in relatively good performance from PPO. When increasing the learning rate by an order of magnitude we end up with WoLF-PPO showing reduced variance, shown in Fig \ref{fig:standard-rps-e1}. This is the same behaviour observed in matching pennies.
+
+We then ran PPO and WoLF-PPO on a weighted version of RPS. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-e1} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results.
+
 \section{Conclusion}
 
 % Connection with IPD - hysteretic agents ... questions around assessing "winning" or "losing" in more general games
 
-In this paper we present an initial study into the ability of PPO to learn the NES in a set of traditional game theory matrix-games. We then present an extension to PPO, WoLF-PPO, that is designed to learn policies closer to the NES. We demonstrate that PPO is able to learn policies close to the NES when the NES is the max-entropy policy. We also shown that WoLF-PPO is able to learn a strategy closer to the NES than PPO in a set of matrix games including games where the NES is not the max-entropy policy.
+In this paper we present an initial study into the ability of PPO to learn the NES in a set of traditional game theory matrix-games. We then present an extension to PPO, WoLF-PPO, that is designed to learn policies closer to the NES. We demonstrate that PPO is able to learn policies close to the NES when the NES is the max-entropy policy. We also shown that WoLF-PPO is able to learn a strategy closer to the NES than PPO in a set of matrix games including games where the NES is not the max-entropy policy. In our experiments we showed that the performance of PPO in both standard MP and RPS is better than originally expected. We believe this is due to the fact that the NES for these games lies on the max-entropy policy. PPO contains a max-entropy term in its objective function, resulting in the NES being directly optimised by the max-entropy term. When training on variants of MP and RPS to shift the NES away from the max-entropy policy we observe that WoLF now provides a much greater advantage over traditional PPO as the agent now learns a policy much closer to the NES. It is important to note that using a max-entropy term when training is a popular technique for promoting exploration and preventing agents from committing to a sub optimal strategy early in training. It is used in approaches such as PPO\cite{schulman2017proximal}, TRPO\cite{schulman2015trust} and ACER\cite{Wang2017SampleEA}. We suspect that similar observations could be made with these approaches with the agents performing much better when the max entropy policy is a NES. We also observed that WoLF-PPO is more robust than PPO when dealing with large learning rates. In the future we would like to expand on this work and move to extensive form games. We would then like to expand beyond what is possible with tabular RL in order to demonstrate bothe the advantages of WoLF and Deep RL by training on raw pixel data.
 
-In this paper we wanted to evaluate the ability of PPO to learn the NES in a set of traditional game theory matrix-games, we then presented an extension to PPO, WoLF-PPO that consolidates recent Deep RL advancments with WoLF. In our experiments we showed that the performance of PPO in both standard MP and RPS is better than originally expected. We believe this is due to the fact that the NES for these games lies on the max-entropy policy. PPO contains a max-entropy term in its objective function, resulting in the NES being directly optimised by the max-entropy term. When training on variants of MP and RPS to shift the NES away from the max-entropy policy we observe that WoLF now provides a much greater advantage over traditional PPO as the agent now learns a policy much closer to the NES. It is important to note that using a max-entropy term when training is a popular technique for promoting exploration and preventing agents from committing to a sub optimal strategy early in training. It is used in approaches such as PPO\cite{schulman2017proximal}, TRPO\cite{schulman2015trust} and ACER\cite{Wang2017SampleEA}. We suspect that similar observations could be made with these approaches with the agents performing much better when the max entropy policy is a NES. We also observed that WoLF-PPO is more robust than PPO when dealing with large learning rates.
-
-In this work we have demonstrated that the WoLF approach can be extended to Deep RL while providing benefits when learning in multi-agent environments, getting closer to the NES. We would like to expand this to extensive form games in the future. We would then like to expand beyond what is possible with tabular RL in order to demonstrate both the advantages of WoLF and Deep RL by training on raw pixel data.
+%In this work we have demonstrated that the WoLF approach can be extended to Deep RL while providing benefits when learning in multi-agent environments, getting closer to the NES. We would like to expand this to extensive form games in the future. We would then like to expand beyond what is possible with tabular RL in order to demonstrate both the advantages of WoLF and Deep RL by training on raw pixel data.
 
 
 \bibliography{cog}
