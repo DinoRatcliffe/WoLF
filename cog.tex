@@ -59,8 +59,8 @@ Sam.Devlin@Microsoft.com}
 \section{Introduction}
 
 % draft 1
-In multi-agent environments the learning problem is non-stationary due to the fact that the other agents polices are changing over time.
-\REVIEW{Guarantees provided by single agent reinforcement learning rely on the problem being framed as a Markov Decision Process (MDP), in the case of playing against learning opponents the problem becomes non-stationary resulting in the guarantees being lost.}
+In multi-agent environments the learning problem is non-stationary due to the fact that the other agents' polices are changing over time.
+\REVIEW{Guarantees provided by single agent reinforcement learning rely on the problem being framed as a Markov Decision Process (MDP), in the case of playing against learning opponents the problem becomes non-stationary resulting in these guarantees being lost.}
 Win or Learn Fast (WoLF) attempts to provide guarantees in these situations\cite{bowling2002multiagent}. It provides guarantees of converging to a Nash Equilibrium Strategy (NES) in theory, and has been shown empirically to get closer to a NES than a fixed learning rate agent. Learning a NES is very desirable as it allows us to learn a stationary policy that has a known lower bound payoff when dealing with rational agents.
 
 In this paper we present an initial study into the ability of Proximal Policy Optimisation (PPO) to learn the NES in a set of traditional game theory matrix-games. We then present an extension to PPO, WoLF-PPO, that is designed to learn policies closer to the NES. We observe that PPO can learn policies close to the NES when it happens to be the max-entropy policy. We also show that WoLF-PPO is able to learn policies closer to the NES than PPO irrespective of if the NES is the max-entropy policy, as well as being more robust to high learning rates.
@@ -149,12 +149,10 @@ The objective function for PPO \REVIEW{that is maximised during training} is sho
     \label{eq:ppo-objective}
 \end{equation}
 
-$c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus, $L_t^{CLIP}$ is the clipped surrogate objective and $L_t^{VF} = (V_{\theta}(s_t)-V_t^{targ})^2$.
+$c_1$ and $c_2$ are coefficients. $S$ is the max entropy bonus, $L_t^{CLIP}$ is the clipped surrogate objective and $L_t^{VF} = (V_{\theta}(s_t)-V_t^{targ})^2$ the squared error loss for learning a simple state value mapping.
 
 \REVIEW{
     The clipped surrogate objective $L_t^{CLIP}$ is a clipped version of the TRPO surrogate objective. This is introduced due to the fact that in TRPO this surrogate objective can result in very large policy updates, this TRPO also introduces an update method that limits the update of the policy to a "Trust Region" defined by the distance from the old policy by a given KL divergence between the two. By clipping the surrogate objective PPO prevents the large policy updates by preventing the surrogate loss from being too large in the beginning.
-
-$L_t^{VF}$ is the squared error loss for learning a simple state value mapping.
 
 The other main contribution in this paper is the use of multiple update steps each iteration of experience. This is made possible by the clipped surrogate loss and allows the agent to more efficiently make use of the samples from the environment.
 }
@@ -196,7 +194,7 @@ For our empirical results we aimed to highlight the difference between PPO and W
 
 \subsection{Matching Pennies (MP)}
 
-Matching pennies is a game were both players pick a side of a coin, either heads or tails, these choices are then revealed simultaneously with one player receiving a point if they match and the other receiving a point if they differ. This results in the NES being uniform random, if you pick the side of the coin at random then you will win 50\% of the games irrespective of your opponents strategy. The payoff matrix for the weighted variant is shown in Table \ref{tab:weighted-mp} this variant shifts the NES away from uniform random.
+Matching pennies is a two-player zero-sum game were both players pick a side of a coin, either heads or tails, these choices are then revealed simultaneously with one player receiving a point if they match and the other receiving a point if they differ. This results in the NES being uniform random, if you pick the side of the coin at random then you will win 50\% of the games irrespective of your opponents strategy. The payoff matrix for the weighted variant is shown in Table \ref{tab:weighted-mp} this variant shifts the NES away from uniform random.
 
 Starting with PPO and WoLF-PPO on the standard weighting of matching pennies we can see that both agents stay close to the NES as shown in Fig \ref{fig:standard-mp-e2} and Table \ref{tab:nash-distance}. In this setting we see that WoLF-PPO does get closer to the NES than PPO but both agents learn strategies close to the NES with PPO within $0.056$ and WoLF-PPO within $0.012$.
 
@@ -246,7 +244,7 @@ In RPS we see very similar results to what we observed in matching pennies. In F
 
 We then ran PPO and WoLF-PPO on a weighted version of RPS. This is to move the NES away from the max entropy policy. In Fig \ref{fig:weighted-rps-e1} and Table \ref{tab:nash-distance} we show that in this environment WoLF-PPO stays closer to the NES than PPO. This is consistent with the matching pennies results.
 \REVIEW{
-    We also observe that WoLF-PPO does have a reduction in performance moving from standard to weighted matching pennies going from a distance of $0.012$ to $0.085$, and rock paper scissors going from $0.013$ to $0.077$. This is likely due to the fact that WoLF-PPO is still benefiting from the max entropy term when playing the standard versions of these games but is more robust than PPO when dealing with the NES not on the max-entropy policy.
+    We also observe that WoLF-PPO does have a reduction in performance moving from standard to weighted matching pennies going from a distance of $0.012$ to $0.085$, and rock paper scissors going from $0.013$ to $0.077$. This is likely due to WoLF-PPO still benefiting from the max entropy term when playing the standard versions of these games, but being more robust to the influence of this term than PPO when dealing with the NES not on the max-entropy policy.
 }
 
 \begin{table}[!ht]
